@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Ham by prenaux</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Ham</h1>
+      <h2 class="project-tagline">Ham is a language agnostic &#39;make&#39; replacement and a virtual build environment.</h2>
+      <a href="https://github.com/prenaux/ham" class="btn">View on GitHub</a>
+      <a href="https://github.com/prenaux/ham/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/prenaux/ham/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <p>Ham aims to provide an easily replicable build and development environment
+that can be setup automatically on any Windows, OSX &amp; Linux machines.</p>
+
+<p>Once the repository has been cloned <strong>ham</strong> will automatically fetch all the tools
+needed to complete a build of various kind of software. No install required !</p>
+
+<p>Currently supported languages/framework/targets:</p>
+
+<ul>
+<li>
+<strong>Bash</strong> 3.1+ on Windows, Linux, OSX</li>
+<li>
+<strong>C/C++</strong> on Windows, Linux, OSX, iOS, Android (x86 &amp; ARM), iOS and HTML5 (via Emscripten)</li>
+<li>
+<strong>ObjectiveC</strong> on OSX and iOS</li>
+<li>
+<strong>Java</strong> on Windows, Linux, OSX and Android</li>
+<li>
+<strong>NodeJS</strong> on Windows, Linux and OSX</li>
+<li>
+<strong>Python 2.6 &amp; 2.7</strong> on Windows, Linux and OSX</li>
+<li>
+<strong>Perl 5.6</strong> on Windows, Linux and OSX</li>
+<li>
+<strong>Git</strong>, <strong>SVN</strong> and <strong>Mercurial</strong> on Windows, Linux and OSX</li>
+<li>
+<strong>XSLT 1&amp;2</strong> on Windows, Linux, OSX</li>
+<li>
+<strong>Emacs</strong> &amp; <strong>Emacs Muse</strong> on Windows, Linux, OSX</li>
+<li>
+<strong>TeX</strong> on Windows, Linux, OSX</li>
+<li>
+<strong>Doxygen</strong> on Windows and OSX</li>
+<li>
+<strong>ffmpeg</strong> on Windows</li>
+<li>
+<strong>winutils</strong> and <strong>windbg</strong> on Windows</li>
+</ul>
+
+<p>Ham is MIT licensed, see LICENSE.txt.</p>
+
+<h1>
+<a id="getting-started" class="anchor" href="#getting-started" aria-hidden="true"><span class="octicon octicon-link"></span></a>Getting Started</h1>
+
+<p>This will NOT use or mess with any of your OS's setup ; it is completely self contained so that you can experiment safely and more importantly so that builds are easily reproducible on other computers/VMs.</p>
+
+<p>If you plan to use all the toolchains you should have at least 5GB of free space where you'll be putting ham. The core stuff is only about 10-20MB.</p>
+
+<p>If you don't have git download the latest version directly from:
+<a href="https://github.com/prenaux/ham/archive/master.zip">https://github.com/prenaux/ham/archive/master.zip</a></p>
+
+<p>Otherwise clone or pull the latest version of the ham repository:
+<code>git clone https://github.com/prenaux/ham.git</code></p>
+
+<h2>
+<a id="windows" class="anchor" href="#windows" aria-hidden="true"><span class="octicon octicon-link"></span></a>Windows</h2>
+
+<p>No setup is required, just run <code>ham-shell.cmd</code> from the <code>ham/bin</code> directory and you'll be dropped in a Bash shell which has access to all the bash and ham commands. You can also use <code>ham.cmd</code> to run ham from third-party applications or from cmd.exe.</p>
+
+<h2>
+<a id="osx--linux" class="anchor" href="#osx--linux" aria-hidden="true"><span class="octicon octicon-link"></span></a>OSX / Linux</h2>
+
+<p>Add this to your shell's .profile:</p>
+
+<div class="highlight highlight-bash"><pre><span class="pl-k">export</span> WORK=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${HOME}</span>/My Work<span class="pl-pds">"</span></span>
+<span class="pl-k">export</span> HAM_HOME=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">$WORK</span>/ham<span class="pl-pds">"</span></span>
+<span class="pl-k">export</span> PATH=<span class="pl-s"><span class="pl-pds">"</span><span class="pl-smi">${PATH}</span>:<span class="pl-smi">$HAM_HOME</span>/bin<span class="pl-pds">"</span></span></pre></div>
+
+<p>Note that the previous snippet is for the bash shell, if you're using another shell you should modify accordingly.</p>
+
+<h1>
+<a id="toolsets" class="anchor" href="#toolsets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Toolsets</h1>
+
+<p>A toolset contains a set of tools, its also commonly called a toolchain.</p>
+
+<p>The following instructions all assume that you are in a 'ham shell' (see the Getting Started section).</p>
+
+<p>The general command to import/setup a toolset is:</p>
+
+<pre><code>. ham-toolset TOOLSET1 ... TOOLSET2
+</code></pre>
+
+<p>Most of the time you will only use a single toolset since most will automatically import all their dependencies:</p>
+
+<pre><code>. ham-toolset TOOLSET
+</code></pre>
+
+<p>'hat' is a shorthand for 'ham-toolset':</p>
+
+<pre><code>. hat TOOLSET
+</code></pre>
+
+<p>When you import a toolset all the necessary binaries will be downloaded so in most case you won't need to install or download any third-party package to get them working.</p>
+
+<h2>
+<a id="default" class="anchor" href="#default" aria-hidden="true"><span class="octicon octicon-link"></span></a>Default</h2>
+
+<p>The default toolset will setup the OS's default C and C++ compilers, the Java JDK 1.6 and the XSLT tools.</p>
+
+<p>Type:</p>
+
+<pre><code>. hat default
+</code></pre>
+
+<h2>
+<a id="repos-git--svn" class="anchor" href="#repos-git--svn" aria-hidden="true"><span class="octicon octicon-link"></span></a>Repos (Git &amp; SVN)</h2>
+
+<p>The repos toolset makes sure git and SVN are available. It will also make Mercurial (hg) accessible if it can be found on the system.</p>
+
+<p>Type:</p>
+
+<pre><code>. hat repos
+</code></pre>
+
+<h2>
+<a id="emscripten" class="anchor" href="#emscripten" aria-hidden="true"><span class="octicon octicon-link"></span></a>Emscripten</h2>
+
+<p>Ham + Emscripten requires about 1GB of disk space.</p>
+
+<ul>
+<li><p>Import the Emscripten toolset in the shell with <code>. ham-toolset emscripten</code>. This can take a while the first time as it will download all the dependencies needed to run Emscripten ; that is: emscripten, nodejs, java_jdk16 and python_27.</p></li>
+<li><p>If the download of the packages is interrupted just re-run <code>. ham-toolset emscripten</code> it will resume where it left off.</p></li>
+<li><p>Once the toolset has been imported successfully it will print the toolset's info, it should look like this:</p></li>
+</ul>
+
+<pre><code>I/Imported toolset 'python_27'.
+I/Imported toolset 'nodejs'.
+I/Imported toolset 'java_jdk16'.
+I/Imported toolset 'xslt_tools'.
+I/Imported toolset 'emscripten'.
+I/Toolset 'emscripten' setup successful.
+=======================================================
+=== Main Toolset ======================================
+=======================================================
+HAM_IMPORTED_TOOLSET = emscripten
+HAM_TOOLSET = EMSCRIPTEN
+HAM_TOOLSET_VER = 1_25
+HAM_TOOLSET_NAME = emscripten
+HAM_TOOLSET_DIR = /Users/Pierre/My Work/ham/toolsets/emscripten
+=======================================================
+=== Tools Version =====================================
+=======================================================
+--- python_27 ------------------------
+Python 2.7.6
+--- nodejs ------------------------
+v0.10.32
+--- java_jdk16 ------------------------
+--- java ---
+java version "1.8.0_25"
+Java(TM) SE Runtime Environment (build 1.8.0_25-b17)
+Java HotSpot(TM) 64-Bit Server VM (build 25.25-b02, mixed mode)
+--- javac ---
+javac 1.8.0_25
+--- xslt_tools_1 ----------------------
+--- xsltproc ---
+xsltproc was compiled against libxml 20900, libxslt 10128 and libexslt 817
+--- saxon ------
+Saxon-HE 9.3.0.5J from Saxonica
+--- emscripten ------------------------
+emcc (Emscripten GCC-like replacement) 1.25.0 (commit c40c7c218c3cfac5d832607733cf1cbc6ba47dab)
+Copyright (C) 2014 the Emscripten authors (see AUTHORS.txt)
+This is free and open source software under the MIT license.
+There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+=======================================================
+</code></pre>
+
+<ul>
+<li>Now you can use 'emcc' and all the Emscripten command line tools from the shell's command line.</li>
+</ul>
+
+<h3>
+<a id="test" class="anchor" href="#test" aria-hidden="true"><span class="octicon octicon-link"></span></a>Test</h3>
+
+<pre><code>. ham-toolset emscripten
+cd "$HAM_HOME/sources/ham/tests/pi"
+emcc pi.c -o pi.html
+</code></pre>
+
+<p>This should output pi.html in the current directory.</p>
+
+<p>Open pi.html in your web browser, it should print in the console view:</p>
+
+<pre><code>PI version 1.0.0 (argc:1,argv:0x501020)
+pi ~= 3.14159065, with 500000 iterations
+</code></pre>
+
+<h1>
+<a id="jamft-jam" class="anchor" href="#jamft-jam" aria-hidden="true"><span class="octicon octicon-link"></span></a>Jam/FT-Jam</h1>
+
+<p>Ham (the make replacement part) is a derivative of "FT-Jam" which is itself a
+derivative of the Jam build tool, based and 100% compatible with Jam 2.5.</p>
+
+<ul>
+<li>The FT-Jam homepage: <a href="http://www.freetype.org/jam/">http://www.freetype.org/jam/</a>
+</li>
+<li>The original Jam homepage: <a href="http://www.perforce.com/jam/jam.html">http://www.perforce.com/jam/jam.html</a>
+</li>
+</ul>
+
+<p><a href="http://www.perforce.com/jam/jam.html">http://www.perforce.com/jam/jam.html</a> is a good resource to get familiar with the Jam language, however "Ham" has made quite a few change to default rules. See <code>ham/rules/base.ham</code>` for an overview. </p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/prenaux/ham">Ham</a> is maintained by <a href="https://github.com/prenaux">prenaux</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
