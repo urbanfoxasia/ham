@@ -52,3 +52,6 @@ npm_install_bin 'npm-flatten'
 npm_install_bin 'jsonlint@1.6.x'
 npm_install     'eslint-plugin-promise@3.5.x'
 npm_install_bin '@2fd/graphdoc@2.4.x'
+
+echo "I/Listing installed dependencies"
+npm list -g --depth 0
