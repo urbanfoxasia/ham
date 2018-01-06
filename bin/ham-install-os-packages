@@ -7,8 +7,10 @@ case $HAM_OS in
         ;;
     OSX)
         echo "### Installing packages required by ham on OSX (brew) ###"
-        # Install brew
-        /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        # Install brew (if required)
+        if [ $(type brew 2>/dev/null | wc -l) != 1 ]; then
+          /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+        fi
         # Install aws beanstalk command line
         brew install awsebcli
         ;;
