@@ -12,7 +12,7 @@ case $HAM_OS in
           /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
         fi
         # Install aws beanstalk command line
-        brew install awsebcli
+        brew install awsebcli awscli
         ;;
     LINUX)
         if [ $(type apt-get 2>/dev/null | wc -l) = 1 ]; then
@@ -35,6 +35,9 @@ case $HAM_OS in
         echo "I/Installing awsebcli"
         sudo pip install awsebcli
         sudo pip install --upgrade awsebcli
+        echo "I/Installing awscli"
+        sudo pip install awscli
+        sudo pip install --upgrade awscli
         ;;
     *)
         echo "E/Toolset: Unsupported host OS"
