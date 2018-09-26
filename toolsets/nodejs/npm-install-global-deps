@@ -63,3 +63,5 @@ echo "I/Installing package 'eslint-plugin-promise' (27/$NUM_PACKAGES)"
 ${NPM_INSTALL} eslint-plugin-promise@3.5.x
 echo "I/Installing package '@2fd/graphdoc' (28/$NUM_PACKAGES)"
 ${NPM_INSTALL_BIN} @2fd/graphdoc@2.4.x
+echo "I/Installing package 'ts-node' (29/$NUM_PACKAGES)"
+${NPM_INSTALL} ts-node
