@@ -65,3 +65,7 @@ echo "I/Installing package '@2fd/graphdoc' (28/$NUM_PACKAGES)"
 ${NPM_INSTALL_BIN} @2fd/graphdoc@2.4.x
 echo "I/Installing package 'ts-node' (29/$NUM_PACKAGES)"
 ${NPM_INSTALL} ts-node
+echo "I/Installing package 'awesome-typescript-loader' (30/$NUM_PACKAGES)"
+${NPM_INSTALL} awesome-typescript-loader
+echo "I/Installing package 'source-map-loader' (31/$NUM_PACKAGES)"
+${NPM_INSTALL} source-map-loader
