@@ -13,6 +13,8 @@ case $HAM_OS in
         fi
         # Install aws beanstalk command line
         brew install awsebcli awscli
+        # Install *watchman* for react-native development
+        brew install watchman
         ;;
     LINUX)
         if [ $(type apt-get 2>/dev/null | wc -l) = 1 ]; then
