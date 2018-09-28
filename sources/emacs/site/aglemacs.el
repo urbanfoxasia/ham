@@ -73,6 +73,8 @@
 (agl-begin-time-block "Font lock (syntax highlighting)")
 (global-font-lock-mode t)
 (setq font-lock-maximum-size 256000)
+;; Improve performance of emacs with long lines
+(setq-default bidi-display-reordering nil)
 
 ;;;======================================================================
 ;;; C-mode
@@ -310,6 +312,26 @@ the text to another HTML buffer."
           (function (lambda ()
                       (setq indent-tabs-mode nil
                             tab-width 2))))
+
+;;*** Cypher (Neo4J) **************************************************************
+(NotBatchMode
+ (autoload 'cypher-mode "cypher-mode" "Major mode for editing Neo4J Cypher code." t)
+ (add-to-list 'auto-mode-alist '("\\.cypher\\'" . cypher-mode))
+ (add-to-list 'auto-mode-alist '("\\.cyp\\'" . cypher-mode))
+)
+
+;;*** SableCC *********************************************************************
+(autoload 'polyglot-mode "polyglot-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.polyglot\\'" . polyglot-mode))
+(add-to-list 'auto-mode-alist '("\\.productions\\'" . polyglot-mode))
+(add-to-list 'auto-mode-alist '("\\.sablecc\\'" . polyglot-mode))
+
+;;*** PowerShell Script ***********************************************************
+(autoload 'powershell-mode "powershell-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.ps1\\'" . powershell-mode))
+
+;;*** Nginx config ****************************************************************
+(autoload 'nginx-mode "nginx-mode" nil t)
 
 ;;;======================================================================
 ;;; IDO completion
@@ -602,65 +624,6 @@ BEG and END (region to sort)."
 	  t)))))))
 
 ;;;======================================================================
-;;; Overlays
-;;;======================================================================
-(NotBatchMode
- (agl-begin-time-block "Overlays")
- (require 'custom)
-
- (defvar all-overlays ())
-
- (defun agl-delete-this-overlay(overlay is-after begin end &optional len)
-   (delete-overlay overlay)
-   )
-
- (defun agl-highlight-current-line()
-   (interactive)
-   (interactive)
-   (setq current-point (point))
-   (beginning-of-line)
-   (setq beg (point))
-   (forward-line 1)
-   (setq end (point))
-   ;; Create and place the overlay
-   (setq error-line-overlay (make-overlay 1 1))
-   ;; Append to list of all overlays
-   (setq all-overlays (cons error-line-overlay all-overlays))
-
-   (if (= agl-kColorTheme 1)
-       (overlay-put error-line-overlay
-                    'face '(background-color . "#AAEEAA"))
-     (overlay-put error-line-overlay
-                  'face '(background-color . "#115511"))
-     )
-
-   (overlay-put error-line-overlay
-                'modification-hooks (list 'agl-delete-this-overlay))
-   (move-overlay error-line-overlay beg end)
-   (goto-char current-point)
-   )
-
- (defun agl-delete-all-overlays()
-   (interactive)
-   (while all-overlays
-     (delete-overlay (car all-overlays))
-     (setq all-overlays (cdr all-overlays))
-     )
-   )
-
- (defun highlight-error-lines(compilation-buffer, process-result)
-   (interactive)
-   (delete-all-overlays)
-   (condition-case nil
-       (while t
-         (next-error)
-         (highlight-current-line)
-         )
-     (error nil))
-   )
-)
-
-;;;======================================================================
 ;;; Move to visible shell
 ;;;======================================================================
 (NotBatchMode
@@ -845,46 +808,6 @@ BEG and END (region to sort)."
 )
 
 ;;;======================================================================
-;;; Autoindent yank
-;;;======================================================================
-(NotBatchMode
- (agl-begin-time-block "Autoindent yank")
-
-;; automatically indenting yanked text if in programming-modes
-(defvar yank-indent-modes '(emacs-lisp-mode
-                            erlang-mode
-                            niscript-mode
-                            c-mode c++-mode
-                            perl-mode cperl-mode
-                            java-mode jde-mode
-                            lisp-interaction-mode
-                            LaTeX-mode TeX-mode)
-  "Modes in which to indent regions that are yanked (or yank-popped)")
-
-(defvar yank-advised-indent-threshold 1000
-  "Threshold (# chars) over which indentation does not automatically occur.")
-
-(defun yank-advised-indent-function (beg end)
-  "Do indentation, as long as the region isn't too large."
-  (if (<= (- end beg) yank-advised-indent-threshold)
-      (indent-region beg end nil)))
-
-(defadvice yank (after yank-indent activate)
-  "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
-  (if (and (not (ad-get-arg 0))
-           (member major-mode yank-indent-modes))
-      (let ((transient-mark-mode nil))
-    (yank-advised-indent-function (region-beginning) (region-end)))))
-
-(defadvice yank-pop (after yank-pop-indent activate)
-  "If current mode is one of 'yank-indent-modes, indent yanked text (with prefix arg don't indent)."
-  (if (and (not (ad-get-arg 0))
-           (member major-mode yank-indent-modes))
-    (let ((transient-mark-mode nil))
-    (yank-advised-indent-function (region-beginning) (region-end)))))
-)
-
-;;;======================================================================
 ;;; CMake
 ;;;======================================================================
 (NotBatchMode
@@ -907,6 +830,50 @@ BEG and END (region to sort)."
 ;;;======================================================================
 (autoload 'markdown-mode "markdown-mode"
   "Major mode for editing Markdown files" t)
+
+;; Override Markdown Mode's image overlays so the image markdown code and the image are both visible!
+(eval-after-load "markdown-mode"
+  '(progn
+     (setq markdown-gfm-use-electric-backquote nil)
+     (setq markdown-max-image-size '(800 . 600))
+     (defun markdown-display-inline-images ()
+       "Add inline image overlays to image links in the buffer.
+This can be toggled with `markdown-toggle-inline-images'
+or \\[markdown-toggle-inline-images]."
+       (interactive)
+       (unless (display-images-p)
+         (error "Cannot show images"))
+       (save-excursion
+         (save-restriction
+           (widen)
+           (goto-char (point-min))
+           (while (re-search-forward markdown-regex-link-inline nil t)
+             (let ((start (match-beginning 0))
+                   (end (match-end 0))
+                   (file (match-string-no-properties 6)))
+               (when (file-exists-p file)
+                 (let* ((abspath (if (file-name-absolute-p file)
+                                     file
+                                   (concat default-directory file)))
+                        (image
+                         (if (and markdown-max-image-size
+                                  (image-type-available-p 'imagemagick))
+                             (create-image
+                              abspath 'imagemagick nil
+                              :max-width (car markdown-max-image-size)
+                              :max-height (cdr markdown-max-image-size))
+                           (create-image abspath))))
+                   (when image
+                     (setq newStart (+ end ))
+                     (setq newEnd (+ end 1))
+                     (let ((ov (make-overlay newStart newEnd)))
+                       (message "%s" newEnd)
+                       (overlay-put ov 'display image)
+                       (overlay-put ov 'face 'default)
+                       (overlay-put ov 'before-string "\n\n")
+                       (push ov markdown-inline-image-overlays))))))))))
+   )
+)
 
 (add-to-list 'auto-mode-alist '("\\.md\\'" . gfm-mode))
 
@@ -943,7 +910,6 @@ BEG and END (region to sort)."
 (NotBatchMode
  (add-to-list 'load-path (concat ENV_DEVENV_EMACS_SCRIPTS "/mark-multiple.el"))
 
- (require 'inline-string-rectangle)
  (require 'mark-more-like-this)
 
  (defun mark-next-like-this (arg)

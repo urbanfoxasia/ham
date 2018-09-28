@@ -19,6 +19,7 @@ case $HAM_OS in
             fi
         fi
         export PYTHON="${PYTHON_DIR}/python.exe"
+        export PYTHON2_BINDIR="${PYTHON_DIR}/Scripts"
         ;;
     OSX*)
         ln -s /usr/bin/python2.7 "${HAM_HOME}/bin/osx-x86/python2"
@@ -26,8 +27,9 @@ case $HAM_OS in
             echo "I/pip not found, installing..."
             sudo easy_install pip
         fi
-        export PYTHON_BINDIR=$HOME/Library/Python/2.7/bin
-        export PATH=$PYTHON_BINDIR:$PATH
+        alias python=python2
+        export PYTHON2_BINDIR=$HOME/Library/Python/2.7/bin
+        export PATH=$PYTHON2_BINDIR:$PATH
         ;;
     LINUX*)
         true # Assume its already available and default on Linux

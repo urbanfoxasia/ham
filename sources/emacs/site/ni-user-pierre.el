@@ -177,6 +177,8 @@ If the new path's directories does not exist, create them."
   (setq pt-executable (concat "\"" HAM_HOME "/bin/nt-x86/pt.exe" "\"")))
  (OSX
   (setq pt-executable (concat "\"" HAM_HOME "/bin/osx-x86/pt"  "\"")))
+ (Linux
+  (setq pt-executable (concat "\"" HAM_HOME "/bin/lin-x64/pt"  "\"")))
 )
 
 ;;;======================================================================
@@ -211,10 +213,6 @@ If the new path's directories does not exist, create them."
    "fontset-default" 'unicode
    "-outline-Arial Unicode MS-normal-normal-normal-sans-*-*-*-*-p-*-gb2312.1980-0")
  )
-
- (Linux
-  (setq default-frame-alist
-        '((font . "-*-Consolas-*-r-*-*-11-108-120-120-c-*-*-*"))))
 )
 
 ;;;======================================================================
@@ -348,6 +346,7 @@ If the new path's directories does not exist, create them."
  (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
  (add-to-list 'auto-mode-alist '("\\.php\\'" . web-mode))
  (add-to-list 'auto-mode-alist '("\\.cshtml\\'" . web-mode))
+ (add-to-list 'auto-mode-alist '("\\.ftl\\'" . web-mode))
 
  (setq web-mode-enable-current-element-highlight t)
  (setq web-mode-enable-auto-quoting nil)
@@ -369,6 +368,7 @@ If the new path's directories does not exist, create them."
 
  ;; web-mode please close all the tags...
  (setq web-mode-void-elements '())
+ (setq web-mode-enable-auto-indentation nil)
 
  ;; for flow errors in compile buffer (F5 & C-F5)
  (add-to-list 'compilation-error-regexp-alist '("^\\(.*?\\):\\([0-9]+\\):.*$" 1 2))
@@ -409,6 +409,52 @@ If the new path's directories does not exist, create them."
    (let ((name (buffer-name)))
      (if (not (string-match "/$" name))
          (rename-buffer (concat "*dired: " name "/*") t))))
+)
+
+;;;======================================================================
+;;; Diff
+;;;======================================================================
+(NotBatchMode
+
+ ;; diff-region* - Diff two regions
+ ;;
+ ;;  To compare two regions, select the first region
+ ;; and run `ni-diff-region-select`.  The region is now copied
+ ;; to a seperate diff-ing buffer.  Next, navigate
+ ;; to the next region in question (even in another file).
+ ;; Mark the region and run `diff-region-now`, the diff
+ ;; of the two regions will be displayed by ediff.
+ ;;
+ ;;  You can re-select the first region at any time
+ ;; by re-calling `ni-diff-region-select`.
+ (defun ni-diff-region-select ()
+   "Select a region to compare"
+   (interactive)
+   (when (use-region-p)  ; there is a region
+     (let (buf)
+       (setq buf (get-buffer-create "*Diff-regionA*"))
+       (save-current-buffer
+         (set-buffer buf)
+         (erase-buffer))
+       (append-to-buffer buf (region-beginning) (region-end)))
+   )
+   (message "Now select other region to compare and run `ni-diff-region-now`")
+ )
+
+ (defun ni-diff-region-now ()
+   "Compare current region with region already selected by `diff-region`"
+   (interactive)
+   (when (use-region-p)
+     (let (bufa bufb)
+       (setq bufa (get-buffer-create "*Diff-regionA*"))
+       (setq bufb (get-buffer-create "*Diff-regionB*"))
+       (save-current-buffer
+         (set-buffer bufb)
+         (erase-buffer))
+       (append-to-buffer bufb (region-beginning) (region-end))
+       (ediff-buffers bufa bufb))
+   )
+ )
 )
 
 ;;;======================================================================

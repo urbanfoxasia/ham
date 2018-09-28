@@ -1,0 +1,37 @@
+#!/bin/bash
+usage() {
+    echo "usage: git-force-pull (REMOTE) BRANCH"
+    echo ""
+    echo "  Fetch and checkout a clean branch from the specified remote."
+    echo ""
+
+    if [[ "${BASH_SOURCE[0]}" != "${0}" ]]; then
+        # sourced...
+        return 1
+    else
+        # regular call
+        exit 1
+    fi
+}
+if [ $# = 1 ]; then
+    ORIGIN=origin
+    BRANCH=$1
+else
+    ORIGIN=$1
+    BRANCH=$2
+fi
+
+if [ -z "$BRANCH" ]; then
+    usage
+fi
+
+set -ex
+
+if [ "`git branch --list tmp-git-force-pull`" ]; then
+    git branch -D tmp-git-force-pull
+fi
+
+git checkout -b tmp-git-force-pull
+git fetch $ORIGIN +$BRANCH:$BRANCH
+git checkout $BRANCH
+git branch -D tmp-git-force-pull

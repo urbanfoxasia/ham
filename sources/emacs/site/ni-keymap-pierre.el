@@ -69,6 +69,10 @@
  (global-set-key (kbd "C-v") 'scroll-up-command)
  (global-set-key (kbd "C-S-v") 'scroll-down-command)
 
+ ;; Scroll one line at a time
+ (global-set-key (quote [C-M-down]) (quote scroll-up-line))
+ (global-set-key (quote [C-M-up]) (quote scroll-down-line))
+
  ;; Toggle word wrap
  (global-set-key (kbd "M-6") 'whitespace-mode)
  ;; Ctrl-=/- increase/decrease font size
@@ -128,7 +132,10 @@
 ;;;======================================================================
 ;;; aglemacs.el: mark-multiple, expand-region
 ;;;======================================================================
- (global-set-key (kbd "C-x r t") 'inline-string-rectangle)
+ (GNUEmacs24
+  ;; Emacs 25+ already do inline rectangle replace
+  (require 'inline-string-rectangle)
+  (global-set-key (kbd "C-x r t") 'inline-string-rectangle))
  (global-set-key (kbd "C-<") 'mark-previous-like-this)
  (global-set-key (kbd "C->") 'mark-next-like-this)
  (global-set-key (kbd "C-*") 'mark-all-like-this)

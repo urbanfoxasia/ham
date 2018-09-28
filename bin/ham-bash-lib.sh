@@ -162,6 +162,11 @@ $ '
   # export PS1="${AGL_TOOLSET_NAME}\$ "
 }
 
+update_project_work() {
+    export WORK="`unxpath $1`"
+    echo "I/Updated WORK: '$WORK'"
+}
+
 upsearch() {
     test / == "$PWD" && return || test -e "$1" && echo "$PWD" && return || cd .. && upsearch "$1"
 }
@@ -473,7 +478,7 @@ arch_date() {
 if [[ $OS == Windows* ]]; then
     export HAM_OS=NT
     export HAM_BIN_LOA=nt-x86
-    if [ -z $HOME ]; then
+    if [ -z "$HOME" ]; then
         export HOME=`unxpath "$USERPROFILE"`
     fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -495,7 +500,7 @@ if [[ -z $BUILD_BIN_LOA ]]; then
     export BUILD_BIN_LOA=$HAM_BIN_LOA
 fi
 
-if [[ -z $WORK ]]; then
+if [[ -z "$WORK" ]]; then
     export WORK=`nativedir "$HAM_HOME/.."`
     if [ "$HAM_NO_VER_CHECK" != "1" ]; then
         echo "W/WORK not set, set to '$WORK' by default."
@@ -516,19 +521,19 @@ if [[ -z $HAM_NUM_JOBS ]]; then
     fi
 fi
 
-if [[ -z $HOME ]]; then
+if [[ -z "$HOME" ]]; then
     echo "E/HOME not set !"
     exit 1
 fi
-if [[ -z $HAM_OS ]]; then
+if [[ -z "$HAM_OS" ]]; then
     echo "E/HAM_OS not set !"
     exit 1
 fi
-if [[ -z $HAM_BIN_LOA ]]; then
+if [[ -z "$HAM_BIN_LOA" ]]; then
     echo "E/HAM_BIN_LOA not set !"
     exit 1
 fi
-if [[ -z $BUILD_BIN_LOA ]]; then
+if [[ -z "$BUILD_BIN_LOA" ]]; then
     echo "E/BUILD_BIN_LOA not set !"
     exit 1
 fi
