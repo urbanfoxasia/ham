@@ -46,7 +46,7 @@ ${NPM_INSTALL} less@2.5.x less-loader@2.2.x
 echo "I/Installing package 'nodemon' (19/$NUM_PACKAGES)"
 ${NPM_INSTALL} nodemon@1.3.7 # 1.3.8 is buggy on Windows
 echo "I/Installing package 'typescript' (20/$NUM_PACKAGES)"
-${NPM_INSTALL_BIN} typescript@2.2.x
+${NPM_INSTALL_BIN} typescript@3.1.x
 echo "I/Installing package 'awesome-typescript-loader' (21/$NUM_PACKAGES)"
 ${NPM_INSTALL} awesome-typescript-loader@3.x
 echo "I/Installing package 'tsd' (22/$NUM_PACKAGES)"
