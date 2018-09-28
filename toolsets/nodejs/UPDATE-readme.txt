@@ -30,6 +30,7 @@ Check to ensure the apps using `ham-node` continue to work as expected.
 
 Packing the self-contained nodejs & modules dir:
 ```
+$ cd 6.14.4
 $ 7z-pack-dir nodejs-v6.14.4-npm-pkgs_ty-20180928_osx-x86.7z osx-x86
 ```
 
