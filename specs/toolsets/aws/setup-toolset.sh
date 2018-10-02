@@ -1,6 +1,6 @@
 #!/bin/bash
 . ham-toolset-import.sh repos
-. ham-toolset-import.sh python_36
+. ham-toolset-import.sh python_27
 
 # toolset
 export HAM_TOOLSET=AWS
@@ -11,25 +11,25 @@ export HAM_TOOLSET_DIR="${HAM_HOME}/toolsets/${HAM_TOOLSET_NAME}"
 # path setup
 case $HAM_OS in
     NT)
-        if [ ! -e "$PYTHON3_BINDIR/eb" ]; then
+        if [ ! -e "$PYTHON2_BINDIR/eb" ]; then
             echo "I/eb not found, installing..."
-            pip3 install awsebcli --upgrade --user
-            errcheck $? aws "E/Can't pip3 install awsebcli."
+            pip install awsebcli --upgrade --user
+            errcheck $? aws "E/Can't pip install awsebcli."
         fi
-        if [ ! -e "$PYTHON3_BINDIR/aws" ]; then
+        if [ ! -e "$PYTHON2_BINDIR/aws" ]; then
             echo "I/aws not found, installing..."
-            pip3 install awscli --upgrade --user
-            errcheck $? aws "E/Can't pip3 install awscli."
+            pip install awscli --upgrade --user
+            errcheck $? aws "E/Can't pip install awscli."
         fi
         ;;
     OSX)
-        if [ ! -e "$PYTHON3_BINDIR/eb" ]; then
+        if [ ! -e "$PYTHON2_BINDIR/eb" ]; then
             echo "I/eb not found, installing..."
-            pip3 install awsebcli --upgrade --user
+            pip install awsebcli --upgrade --user
         fi
-        if [ ! -e "$PYTHON3_BINDIR/aws" ]; then
+        if [ ! -e "$PYTHON2_BINDIR/aws" ]; then
             echo "I/aws not found, installing..."
-            pip3 install awscli --upgrade --user
+            pip install awscli --upgrade --user
         fi
         ;;
     LINUX)
