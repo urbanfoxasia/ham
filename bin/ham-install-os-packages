@@ -31,9 +31,9 @@ case $HAM_OS in
         fi
 
         echo "I/Installing awcli"
-        sudo pip3 install awscli --upgrade --user
+        sudo pip install awscli --upgrade --user
         echo "I/Installing awsebcli"
-        sudo pip3 install awsebcli --upgrade --user
+        sudo pip install awsebcli --upgrade --user
         ;;
     *)
         echo "E/Toolset: Unsupported host OS"
