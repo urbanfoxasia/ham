@@ -44,7 +44,7 @@ npm_install     'supertest@1.x'
 npm_install     'url-loader@0.5.x'
 npm_install     'less@2.5.x less-loader@2.2.x'
 npm_install     'nodemon@1.3.7' # 1.3.8 is buggy on Windows
-npm_install_bin 'typescript@2.2.x'
+npm_install_bin 'typescript@2.x.x'
 npm_install     'awesome-typescript-loader@3.x'
 npm_install     'tsd@0.6.x'
 npm_install_bin 'react-native-cli@0.1.x'

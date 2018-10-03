@@ -62,7 +62,7 @@ var configFrontEnd = function(aIsDev,aUseSourceMap) {
 
   return {
     resolve: {
-      extensions: [ '', '.js', '.jsx' ],
+      extensions: [ '', '.js', '.jsx', '.ts', '.tsx', '.json' ],
       modulesDirectories: [
         "web_modules", "node_modules",
         globalNodeModulesDir,
@@ -85,6 +85,10 @@ var configFrontEnd = function(aIsDev,aUseSourceMap) {
 
     module: {
       loaders: [
+        { 
+          test: /\.tsx?$/,
+          loader: "awesome-typescript-loader" 
+        },
         { test: /\.jsx$/,
           loader: (aIsDev ? 'react-hot!' : '') + 'jsx-loader',
           exclude: /(node_modules|bower_components)/,
@@ -275,8 +279,8 @@ function backendWatch(aParams) {
   var NODEMON = require('nodemon');
   NODEMON(NI.shallowClone({
     verbose: true,
-    script: 'sources/server.js',
-    ext: 'js jsx',
+    exec: 'ts-node ./sources/server.ts',
+    ext: 'ts tsx js jsx',
     watch: ['sources'],
     ignore: ["*flymake*.*", "*-test.js", "sources/client.js", "sources/client/*", "sources/components/*", "node_modules/*"],
     env: {
