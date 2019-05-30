@@ -15,31 +15,25 @@ case $HAM_OS in
         brew install awsebcli awscli
         # Install *watchman* for react-native development
         brew install watchman
-        # Install *jq*
-        brew install jq
         ;;
     LINUX)
         if [ $(type apt-get 2>/dev/null | wc -l) = 1 ]; then
             echo "### Installing packages required by ham on Linux (apt-get) ###"
             echo "I/Installing apt-get packages"
-            sudo apt-get -y install \
-              xsltproc p7zip-full git curl gcc g++ clang ffmpeg \
-              libcurl4-openssl-dev mesa-common-dev mesa-utils \
-              freeglut3-dev libsdl2-dev python3-pip
+            sudo apt-get -y install xsltproc p7zip-full git curl gcc g++ clang ffmpeg libcurl4-openssl-dev mesa-common-dev mesa-utils freeglut3-dev libsdl2-dev python3-pip
         elif [ $(type pacman 2>/dev/null | wc -l) = 1 ]; then
             echo "### Installing packages required by ham on Linux (pacman) ###"
             echo "I/Installing pacman packages"
-            sudo pacman -S install \
-              libxslt p7zip git python-pip jq
+            sudo pacman -S install libxslt p7zip git python-pip
         else
             echo "E/Unsupported LINUX package manager"
             return 1
         fi
 
         echo "I/Installing awcli"
-        sudo pip install awscli --upgrade --user
+        sudo pip3 install awscli --upgrade --user
         echo "I/Installing awsebcli"
-        sudo pip install awsebcli --upgrade --user
+        sudo pip3 install awsebcli --upgrade --user
         ;;
     *)
         echo "E/Toolset: Unsupported host OS"
