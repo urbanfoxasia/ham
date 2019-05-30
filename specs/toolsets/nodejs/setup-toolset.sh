@@ -54,13 +54,9 @@ case $HAM_OS in
         ;;
 esac
 
-VER="--- nodejs ------------------------
-`node --version`
---- npm ---------------------------
-`npm --version`"
+VER="nodejs `node --version`, npm `npm --version`"
 if [ $? != 0 ]; then
     echo "E/Can't get version."
     return 1
 fi
-export HAM_TOOLSET_VERSIONS="$HAM_TOOLSET_VERSIONS
-$VER"
+export HAM_TOOLSET_VERSIONS="$VER"

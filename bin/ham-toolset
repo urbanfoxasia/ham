@@ -17,7 +17,8 @@ usage() {
 # find the _ham_project file
 FOUND_PROJECT_DIR="`hat-search-ham-project.sh`"
 if [[ -e "$FOUND_PROJECT_DIR" ]]; then
-    echo "I/Found _ham_setup in '${FOUND_PROJECT_DIR}'"
+    echo ""
+    echo "Found HAM Setup In: ${FOUND_PROJECT_DIR}"
 fi
 
 # Check that there is at least one argument...
