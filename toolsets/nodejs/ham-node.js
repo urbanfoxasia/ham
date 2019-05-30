@@ -58,7 +58,7 @@ var configFrontEnd = function(aIsDev,aUseSourceMap) {
     // NI.info("clientFile: %s, %s", file, name);
     entry[name] = [ file ]
   });
-  NI.log("FrontEnd Entries: %K", entry);
+  // NI.log("FrontEnd Entries: %K", entry);
 
   return {
     resolve: {
@@ -87,7 +87,9 @@ var configFrontEnd = function(aIsDev,aUseSourceMap) {
       loaders: [
         { 
           test: /\.tsx?$/,
-          loader: "awesome-typescript-loader" 
+          loader: "awesome-typescript-loader",
+          exclude: /(node_modules|bower_components)/,
+          include: PATH.join(baseDir, 'sources')
         },
         { test: /\.jsx$/,
           loader: (aIsDev ? 'react-hot!' : '') + 'jsx-loader',
@@ -207,7 +209,7 @@ function frontendBuild(aParams,aDone) {
     })
   );
 
-  NI.log("Started webpack build...");
+  NI.log("$ webpack> Started build...");
   WEBPACK(myConfig).run(buildOnBuild(aDone));
 }
 exports.frontendBuild = frontendBuild;
@@ -254,7 +256,20 @@ function frontendWatch(aParams) {
     quiet: false,
     noInfo: true,
     stats: {
-      colors: true
+      colors: true,
+      hash: false,
+      version: false,
+      timings: false,
+      assets: false,
+      chunks: false,
+      modules: false,
+      reasons: false,
+      children: false,
+      source: false,
+      // errors: false,
+      // errorDetails: false,
+      // warnings: false,
+      publicPath: false
     },
     headers: { 'Access-Control-Allow-Origin': '*' }
   });
@@ -262,9 +277,8 @@ function frontendWatch(aParams) {
   webpackServer.listen(bundlePort, 'localhost', function (err /*, result*/) {
     if(err) {
       console.log(err);
-    }
-    else {
-      console.log('Webpack dev server listening at localhost:'+bundlePort);
+    } else {
+      console.log('$ webpack> listening at localhost:' + bundlePort);
     }
   });
 }
@@ -293,11 +307,11 @@ function backendWatch(aParams) {
     }
   }, debug ? { exec: 'node --inspect' } : {}));
   NODEMON.on('start', function () {
-    console.log('... Nodemon server.js has started');
+    console.log('$ nodemon> Starting Server...');
   }).on('quit', function () {
-    console.log('... Nodemon server.js has quit');
+    console.log('$ nodemon> Server Quitting...');
   }).on('restart', function (files) {
-    console.log('... Nodemon server.js restarted due to: ', files);
+    console.log('$ nodemon> Server Restarting Due To: ', files);
   });
 }
 exports.backendWatch = backendWatch;
@@ -316,7 +330,7 @@ function extractFrontendPort(aParams) {
 exports.dev = function(aParams) {
   frontendWatch(NI.shallowClone(aParams, {
     serverPort: extractFrontendPort(aParams)
-  }));
+  }))
   backendWatch(aParams);
 }
 
@@ -445,7 +459,7 @@ function errorHelpExit(aMsg) {
 
   for (var i = 0; i < targets.length; ++i) {
     var targetName = targets[i]
-    NI.println("# %s...", targetName);
+    NI.println("Run Mode: %s \n", targetName);
     aTargets[targetName](paramObject);
   }
 }(exports));

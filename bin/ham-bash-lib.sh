@@ -260,13 +260,18 @@ toolset_dl_cleanup() {
 }
 
 toolset_info() {
-    echo "=== Ham Info ======================================"
-    echo "PODS = ${HAM_IMPORTED_PODS}"
-    echo "TOOLSETS = ${HAM_IMPORTED_TOOLSETS}"
-    echo "MAIN TOOLSET = ${HAM_TOOLSET}, VER: ${HAM_TOOLSET_VER}, NAME: ${HAM_TOOLSET_NAME}, DIR: ${HAM_TOOLSET_DIR}"
-    echo -n "TOOLS VERSION = "
-    echo "$HAM_TOOLSET_VERSIONS"
-    echo "==================================================="
+    echo ""
+    echo "=============================================== Ham Info ==============================================="
+    if [ ! -z "${HAM_IMPORTED_PODS}" ] 
+        then
+            echo "PODS: ${HAM_IMPORTED_PODS}123"
+    fi
+    echo "Toolset(s): ${HAM_IMPORTED_TOOLSETS}"
+    echo "Main Toolset: ${HAM_TOOLSET}, Ver: ${HAM_TOOLSET_VER}, Name: ${HAM_TOOLSET_NAME}"
+    echo "Directory: ${HAM_TOOLSET_DIR}"
+    echo "Tools Version: ${HAM_TOOLSET_VERSIONS}"
+    echo "========================================================================================================"
+    echo ""
 }
 
 toolset_import_list() {
